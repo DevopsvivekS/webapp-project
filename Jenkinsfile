@@ -20,3 +20,4 @@ node{
       tokenCredentialId: 'slack-demo', 
       username: 'devopsprojects'
   }
+}
