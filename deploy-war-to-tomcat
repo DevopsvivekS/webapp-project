@@ -1,0 +1,31 @@
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/DevopsvivekS/webapp-project.git'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'maven-3', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
+   stage('Deploy to Tomcat'){
+      
+      sshagent(['Tomcat_Credentials']) {
+         sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.46.56:/opt/tomcat8/webapps/'
+      }
+   }
+   stage('Email Notification'){
+      mail bcc: '', body: '''Hi Welcome to jenkins email alerts
+      Thanks
+      vivek''', cc: '', from: '', replyTo: '', subject: 'jenkins job', to: 'vivekextreme@gmail.com'
+      
+   }
+   stage('Slack Notification'){
+        slackSend baseUrl: 'https://hooks.slack.com/services/', 
+        channel: '#jenkins-pipeline-demo',
+        color: 'good',
+        message: 'Welcome to Jenkins', 
+        tokenCredentialId: 'slack-demo-1', 
+        username: 'vivek singh'
+   }
+
+}
