@@ -16,7 +16,6 @@ node{
   stage("Quality Gate Status Check"){
           timeout(time: 1, unit: 'HOURS') {
                def qg = waitForQualityGate()
-               $qg abortPipeline: true
               if (qg.status != 'OK') {
                 slackSend baseUrl: 'https://hooks.slack.com/services/', 
                 channel: '#jenkins-pipeline-demo',
